@@ -8,6 +8,6 @@
 
     <html>
     <head><title>Hello</title></head>
-    <body><h1><a href="EtudiantServlet">Etudiants</a></h1></body>
+    <body><h1><a href="Etudiants">Etudiants</a></h1></body>
     </html>
 

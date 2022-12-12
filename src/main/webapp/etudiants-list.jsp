@@ -14,6 +14,7 @@
 
 </header>
 <br>
+<h1><a href="CreateEtudiantServlet">Create</a></h1>
 
 <div class="row">
     <!-- <div class="alert alert-success" *ngIf='message'>{{message}}</div> -->

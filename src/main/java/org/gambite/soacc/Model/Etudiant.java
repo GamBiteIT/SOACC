@@ -10,14 +10,14 @@ public class Etudiant {
     protected String nom;
     protected String prenom;
     protected String sexe;
-    protected Date date_naissance;
+    protected String date_naissance;
     protected String prenom_pere;
     protected String nom_mere ;
     protected String prenom_mere;
     protected  int annee_derniere_inscription;
-    protected int niveau_id = 1;
+    protected int niveau_id ;
     public Etudiant(){}
-    public Etudiant(int matricule, String nom , String prenom , String sexe, Date date_naissance, String prenom_pere,String nom_mere, String prenom_mere, int annee_derniere_inscription){
+    public Etudiant(int matricule, String nom , String prenom , String sexe, String date_naissance, String prenom_pere,String nom_mere, String prenom_mere, int annee_derniere_inscription,int niveau_id){
         super();
         this.matricule = matricule;
         this.nom = nom;
@@ -28,7 +28,7 @@ public class Etudiant {
         this.nom_mere = nom_mere;
         this.prenom_mere = prenom_mere;
         this.annee_derniere_inscription = annee_derniere_inscription;
-        this.niveau_id = 1;
+        this.niveau_id = niveau_id;
 
     }
 
@@ -96,17 +96,13 @@ public class Etudiant {
         this.annee_derniere_inscription = annee_derniere_inscription;
     }
 
-    public Date getDateNaissance() {
-       // return (new SimpleDateFormat("yyyy-MM-dd")).format(this.date_naissance);
-        return date_naissance;
+    public String getDateNaissance() {
+       return  date_naissance;
+
     }
 
     public void setDateNaissance(String date_naissance) {
-        try {
-            this.date_naissance = DateFormat.getDateInstance().parse(date_naissance);
-        } catch (ParseException e) {
-            // ...
-        }
+        this.date_naissance = date_naissance;
     }
 
 

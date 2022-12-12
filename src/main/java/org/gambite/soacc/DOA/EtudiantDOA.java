@@ -16,8 +16,8 @@ public class EtudiantDOA {
     private String jdbcUsername = "postgres";
     private String jdbcPassword = "";
     private  final String SELECT_ALL_ETUDIANTS = "SELECT * FROM etudiants";
-    private static final String INSERT_ETUDIANTS_SQL = "INSERT INTO etudiants" + "  (matricule, nom, prenom,sexe,) VALUES "
-            + " (?, ?, ?);";
+    private static final String INSERT_ETUDIANTS_SQL = "INSERT INTO etudiants" + "  (matricule, nom, prenom,sexe,date_naissance,prenom_pere,nom_mere,prenom_mere,annee_derniere_inscription,niveau_id) VALUES "
+            + " (?, ?, ?,?,?,?,?,?,?,?);";
     public EtudiantDOA(){}
     protected Connection getConnection() {
         Connection connection = null;
@@ -32,6 +32,29 @@ public class EtudiantDOA {
             e.printStackTrace();
         }
         return connection;
+    }
+    public void insertUser(Etudiant etudiant) throws SQLException {
+        System.out.println(INSERT_ETUDIANTS_SQL);
+        // try-with-resource statement will auto close the connection.
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ETUDIANTS_SQL)) {
+            preparedStatement.setInt(1, etudiant.getMatricule());
+            preparedStatement.setString(2, etudiant.getNom());
+            preparedStatement.setString(3, etudiant.getPrenom());
+            preparedStatement.setString(4, etudiant.getSexe());
+            preparedStatement.setString(5, etudiant.getDateNaissance());
+            preparedStatement.setString(6,etudiant.getPrenomPere());
+            preparedStatement.setString(7,etudiant.getNomMere());
+            preparedStatement.setString(8,etudiant.getPrenomMere());
+            preparedStatement.setInt(9,etudiant.getAnneeDerniereInscription());
+            preparedStatement.setInt(10,1);
+
+
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
     }
     public  List<Etudiant> selectAllEtudiant(){
         List<Etudiant> etudiants = new ArrayList<>();
@@ -49,14 +72,14 @@ public class EtudiantDOA {
                 String nom = rs.getString("nom");
                 String prenom = rs.getString("prenom");
                 String sexe = rs.getString("sexe");
-                Date date_naissance = rs.getDate("date_naissance");
+                String date_naissance = rs.getString("date_naissance");
                 String prenom_pere = rs.getString("prenom_pere");
                 String nom_mere = rs.getString("nom_mere");
                 String prenom_mere = rs.getString("prenom_mere");
                 int annee_derniere_inscription = rs.getInt("annee_derniere_inscription");
 
 
-                etudiants.add(new Etudiant(matricule, nom , prenom , sexe, date_naissance, prenom_pere, nom_mere, prenom_mere,  annee_derniere_inscription));
+                etudiants.add(new Etudiant(matricule, nom , prenom , sexe, date_naissance, prenom_pere, nom_mere, prenom_mere,  annee_derniere_inscription,1));
             }
         } catch (SQLException e) {
             printSQLException(e);

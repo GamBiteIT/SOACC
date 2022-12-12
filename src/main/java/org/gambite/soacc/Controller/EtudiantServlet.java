@@ -1,6 +1,7 @@
 package org.gambite.soacc.Controller;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 
@@ -13,7 +14,7 @@ import org.gambite.soacc.Model.Etudiant;
 
 import java.io.IOException;
 
-@WebServlet(name = "EtudiantServlet", value = "/EtudiantServlet")
+@WebServlet( "/Etudiants")
 public class EtudiantServlet extends HttpServlet {
     private static final long serialVersionUID = 102831973239L;
 
@@ -28,6 +29,7 @@ public class EtudiantServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getServletPath();
+
         try {
             switch (action) {
 
@@ -38,11 +40,12 @@ public class EtudiantServlet extends HttpServlet {
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doGet(request, response);
     }
     private void listEtudiants(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
@@ -53,4 +56,5 @@ public class EtudiantServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("etudiants-list.jsp");
         dispatcher.forward(request, response);
     }
+
 }
