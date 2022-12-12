@@ -16,6 +16,8 @@ public class EtudiantDOA {
     private String jdbcUsername = "postgres";
     private String jdbcPassword = "";
     private  final String SELECT_ALL_ETUDIANTS = "SELECT * FROM etudiants";
+    private static final String SELECT_ETUDIANT_BY_MATRICULE = "select matricule, nom, prenom,sexe,date_naissance,prenom_pere,nom_mere,prenom_mere,annee_derniere_inscription,niveau_id from etudiants where matricule = ?";
+    private static final String UPDATE_ETUDIANTS_SQL = "update etudiants set nom = ?,prenom = ?, sexe = ?, date_naissance = ?,prenom_pere = ?, nom_mere = ? , prenom_mere = ? , annee_derniere_inscription= ?  where matricule = ?;";
     private static final String INSERT_ETUDIANTS_SQL = "INSERT INTO etudiants" + "  (matricule, nom, prenom,sexe,date_naissance,prenom_pere,nom_mere,prenom_mere,annee_derniere_inscription,niveau_id) VALUES "
             + " (?, ?, ?,?,?,?,?,?,?,?);";
     public EtudiantDOA(){}
@@ -85,6 +87,59 @@ public class EtudiantDOA {
             printSQLException(e);
         }
         return etudiants;
+    }
+
+    public Etudiant selectEtudiant(int matricule) {
+        Etudiant etudiant = null;
+        // Step 1: Establishing a Connection
+        try (Connection connection = getConnection();
+             // Step 2:Create a statement using connection object
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ETUDIANT_BY_MATRICULE);) {
+            preparedStatement.setInt(1, matricule);
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // Step 4: Process the ResultSet object.
+            while (rs.next()) {
+
+                String nom = rs.getString("nom");
+                String prenom = rs.getString("prenom");
+                String sexe = rs.getString("sexe");
+                String date_naissance = rs.getString("date_naissance");
+                String prenom_pere = rs.getString("prenom_pere");
+                String nom_mere = rs.getString("nom_mere");
+                String prenom_mere = rs.getString("prenom_mere");
+                int annee_derniere_inscription = rs.getInt("annee_derniere_inscription");
+                int niveau_id = rs.getInt("niveau_id");
+
+
+                etudiant = new Etudiant(matricule, nom , prenom , sexe, date_naissance, prenom_pere, nom_mere, prenom_mere,  annee_derniere_inscription,niveau_id);
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return etudiant;
+    }
+    public boolean updateEtudiant(Etudiant etudiant) throws SQLException {
+        boolean rowUpdated;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_ETUDIANTS_SQL);) {
+
+            statement.setString(1, etudiant.getNom());
+            statement.setString(2, etudiant.getPrenom());
+            statement.setString(3, etudiant.getSexe());
+            statement.setString(4, etudiant.getDateNaissance());
+            statement.setString(5, etudiant.getPrenomPere());
+            statement.setString(6, etudiant.getNomMere());
+            statement.setString(7, etudiant.getPrenomMere());
+            statement.setInt(8, etudiant.getAnneeDerniereInscription());
+            statement.setInt(9,etudiant.getMatricule());
+
+
+            rowUpdated = statement.executeUpdate() > 0;
+        }
+        return rowUpdated;
     }
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {

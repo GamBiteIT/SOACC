@@ -43,12 +43,13 @@
 
                     for (Etudiant l:list){%>
                 <tr>
-                <td> <%=l.getMatricule()%> </td>
+                <td id="matricule" value = `<%l.getMatricule();%>`> <%=l.getMatricule()%> </td>
                 <td> <%=l.getNom()%> </td>
                 <td> <%=l.getPrenom()%> </td>
                 <td> <%=l.getSexe()%> </td>
                 <td> <%=l.getDateNaissance()%> </td>
                 <td> <%=l.getPrenomPere()%> </td>
+                <td><a href="UpdateEtudiantServlet?matricule=<%= l.getMatricule()%>">Edit</a></td>
 
 
 

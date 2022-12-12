@@ -7,11 +7,12 @@ import org.gambite.soacc.DOA.EtudiantDOA;
 import org.gambite.soacc.Model.Etudiant;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.Date;
 
-@WebServlet(name = "CreateEtudiantServlet", value = "/CreateEtudiantServlet")
-public class CreateEtudiantServlet extends HttpServlet {
+@WebServlet(name = "UpdateEtudiantServlet", value = "/UpdateEtudiantServlet")
+public class UpdateEtudiantServlet extends HttpServlet {
+    private int  mat;
     private EtudiantDOA etudiantDOA;
     @Override
     public void init() throws ServletException {
@@ -19,26 +20,39 @@ public class CreateEtudiantServlet extends HttpServlet {
         etudiantDOA = new EtudiantDOA();
 
     }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-     showNewForm(request,response);
+
+
+        try {
+            showEditForm(request,response);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            insertEtudiant(request,response);
+            updateEtudiant(request,response);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("etudiant-form.jsp");
+
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        int matricule = Integer.parseInt(request.getParameter("matricule"));
+        mat = matricule;
+        Etudiant existingEtudiant = etudiantDOA.selectEtudiant(matricule);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("etudiant-edit.jsp");
+        request.setAttribute("etudiant", existingEtudiant);
         dispatcher.forward(request, response);
     }
-    private void insertEtudiant(HttpServletRequest request, HttpServletResponse response)
+    private void updateEtudiant(HttpServletRequest request,HttpServletResponse response)
             throws SQLException, IOException {
         int matricule = Integer.parseInt(request.getParameter("matricule"));
         String nom = request.getParameter("nom");
@@ -49,8 +63,12 @@ public class CreateEtudiantServlet extends HttpServlet {
         String nom_mere = request.getParameter("nom_mere");
         String prenom_mere = request.getParameter("prenom_mere");
         int annee_derniere_inscription = Integer.parseInt(request.getParameter("annee_derniere_inscription"));
-        Etudiant newEtudiant = new Etudiant(matricule,nom,prenom,sexe,date_naissance,prenom_pere,nom_mere,prenom_mere,annee_derniere_inscription,1);
-        etudiantDOA.insertUser(newEtudiant);
+        Etudiant etudiantupdated = new Etudiant(matricule,nom,prenom,sexe,date_naissance,prenom_pere,nom_mere,prenom_mere,annee_derniere_inscription,1);
+
+
+        etudiantDOA.updateEtudiant(etudiantupdated);
         response.sendRedirect("Etudiants");
     }
+
+
 }
